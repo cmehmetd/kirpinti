@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1AA9FF">
+  <meta name="description" content="Kırpıntı: kağıt dokulu dijital junk journal ve kolaj defteri.">
+  <meta name="application-name" content="Kırpıntı">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kırpıntı">
+  <title>Kırpıntı</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Courier+Prime&family=Dancing+Script:wght@600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Kalam:wght@400;700&family=Patrick+Hand&family=Shadows+Into+Light&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- KİMLİK: ilk kurulum, şifre oluşturma ve kilit ekranı -->
+  <section id="setup" class="view">
+    <div class="setup-card">
+      <div class="brand-mark">Kırpıntı</div>
+      <p class="tagline" id="setupTagline">Parçalardan bir defter.</p>
+      <form id="setupForm" class="setup-form" novalidate>
+        <div id="nameBlock">
+          <label for="setupName">Sana nasıl hitap edelim?</label>
+          <input id="setupName" class="text-input" maxlength="24" autocomplete="name" placeholder="Adın">
+        </div>
+        <div>
+          <label for="authPw">Şifre</label>
+          <input id="authPw" class="text-input" type="password" autocomplete="current-password" placeholder="En az 4 karakter">
+        </div>
+        <div id="pw2Block">
+          <label for="authPw2">Şifre tekrar</label>
+          <input id="authPw2" class="text-input" type="password" autocomplete="new-password" placeholder="Şifreyi tekrar yazın">
+        </div>
+        <p id="authError" class="auth-error hidden" role="alert"></p>
+        <button class="btn-primary" id="authSubmit" type="submit">Başla</button>
+      </form>
+      <button class="link-btn hidden" id="authForgot" type="button">Şifremi unuttum (tüm verileri sil)</button>
+      <p class="fine" id="authFine"></p>
+    </div>
+  </section>
+
+  <!-- GALERİ -->
+  <section id="gallery" class="view">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Kırpıntı</h1>
+        <span>Parçalardan bir defter</span>
+      </div>
+      <button class="avatar-btn" id="btnProfile" aria-label="Profil"></button>
+      <button class="btn-primary" id="btnNew">Yeni sayfa</button>
+    </header>
+    <div id="pageGrid" class="page-grid"></div>
+    <p id="emptyMsg" class="empty hidden">Henüz defter yok. Yeni bir defter açıp kırpıntılarını yapıştırmaya başla.</p>
+  </section>
+
+  <!-- PROFİL -->
+  <section id="profile" class="view">
+    <header class="topbar">
+      <button class="icon-btn" id="btnProfileBack" aria-label="Galeriye dön">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <h2 class="view-title">Profil</h2>
+    </header>
+    <div class="profile-body">
+      <div class="profile-head">
+        <div class="avatar-big" id="profAvatar"></div>
+        <div>
+          <strong id="profName" class="profile-name"></strong>
+          <small id="profStats" class="muted"></small>
+        </div>
+      </div>
+
+      <form id="nameForm" class="field-row">
+        <input id="nameInput" class="text-input" maxlength="24" aria-label="Adın" autocomplete="off">
+        <button class="btn-primary small" type="submit">Kaydet</button>
+      </form>
+
+      <h3 class="section-title">Görünüm</h3>
+      <div class="seg" id="themeSeg" role="group" aria-label="Tema">
+        <button type="button" data-theme="system">Sistem</button>
+        <button type="button" data-theme="light">Açık</button>
+        <button type="button" data-theme="dark">Koyu</button>
+      </div>
+
+      <h3 class="section-title">Şifre</h3>
+      <form id="pwForm" class="pw-form">
+        <input id="oldPw" class="text-input" type="password" autocomplete="current-password" placeholder="Eski şifre">
+        <input id="newPw" class="text-input" type="password" autocomplete="new-password" placeholder="Yeni şifre (en az 4 karakter)">
+        <input id="newPw2" class="text-input" type="password" autocomplete="new-password" placeholder="Yeni şifre tekrar">
+        <button class="btn-primary small" type="submit">Şifreyi değiştir</button>
+      </form>
+
+      <h3 class="section-title">Uygulama</h3>
+      <div class="install-box">
+        <p class="muted small">Kırpıntı'yı telefonunuza uygulama gibi kurabilirsiniz. Tarayıcı çubuğu olmadan, çevrimdışı da açılır.</p>
+        <button class="btn-primary small" id="btnInstall" type="button" hidden>Uygulamayı yükle</button>
+        <p class="muted small" id="iosHint" hidden>iPhone'da: Safari'de <strong>Paylaş</strong> düğmesine dokunup <strong>Ana Ekrana Ekle</strong>'yi seçin.</p>
+      </div>
+
+      <h3 class="section-title">Veriler</h3>
+      <p class="muted small">Defterler, videolar ve kendi çıkartmaların yalnızca bu tarayıcıda durur.</p>
+      <button class="btn-danger-ghost" id="btnWipe" type="button">Tüm verileri ve hesabı sil</button>
+    </div>
+  </section>
+
+  <!-- EDİTÖR -->
+  <section id="editor" class="view">
+    <header class="topbar editor-top">
+      <button class="icon-btn" id="btnBack" aria-label="Galeriye dön">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <input id="pageTitle" class="title-input" maxlength="40" placeholder="Defter adı" autocomplete="off">
+      <button class="icon-btn" id="btnExport" aria-label="Dışa aktar">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+      </button>
+      <button class="btn-primary small" id="btnSave">Kaydet</button>
+    </header>
+
+    <nav id="tabs" class="tabs" aria-label="Sayfalar"></nav>
+
+    <div id="stageWrap">
+      <div id="stage" class="stage">
+        <canvas id="drawCanvas" class="hidden"></canvas>
+      </div>
+    </div>
+
+    <div id="selBar" class="sel-bar hidden">
+      <button class="sel-btn" id="selEdit" data-sel="edit">Düzenle</button>
+      <button class="sel-btn" data-sel="dup">Çoğalt</button>
+      <button class="sel-btn danger" data-sel="del">Sil</button>
+      <button class="sel-btn" data-sel="close">Bırak</button>
+    </div>
+
+    <nav id="toolbar" class="toolbar">
+      <button class="tool-btn" data-tool="photo">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>
+        <span>Fotoğraf</span>
+      </button>
+      <button class="tool-btn" data-tool="video">
+        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg>
+        <span>Video</span>
+      </button>
+      <button class="tool-btn" data-tool="sticker">
+        <svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
+        <span>Sticker</span>
+      </button>
+      <button class="tool-btn" data-tool="text">
+        <svg viewBox="0 0 24 24"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg>
+        <span>Metin</span>
+      </button>
+      <button class="tool-btn" data-tool="draw">
+        <svg viewBox="0 0 24 24"><path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/></svg>
+        <span>Çizim</span>
+      </button>
+      <button class="tool-btn" data-tool="paper">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16" opacity=".5"/></svg>
+        <span>Arka plan</span>
+      </button>
+    </nav>
+
+    <div id="drawBar" class="toolbar draw-bar hidden">
+      <div id="drawColors" class="draw-group"></div>
+      <div id="drawWidths" class="draw-group"></div>
+      <button class="sel-btn" id="drawUndo">Geri al</button>
+      <button class="sel-btn" id="drawCancel">İptal</button>
+      <button class="btn-primary small" id="drawDone">Bitti</button>
+    </div>
+  </section>
+</div>
+
+<!-- ALT PANEL -->
+<div id="sheet" class="sheet-backdrop hidden">
+  <div class="sheet" role="dialog" aria-modal="true">
+    <header class="sheet-head">
+      <h2 id="sheetTitle"></h2>
+      <button class="icon-btn small" id="sheetClose" aria-label="Kapat">✕</button>
+    </header>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<!-- ÖZEL ONAY PENCERESİ -->
+<div id="dialog" class="dialog-backdrop hidden" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle">
+  <div class="dialog">
+    <h2 id="dlgTitle"></h2>
+    <p id="dlgText"></p>
+    <div class="dialog-actions">
+      <button class="btn-ghost" id="dlgCancel" type="button">Vazgeç</button>
+      <button class="btn-primary small" id="dlgOk" type="button">Tamam</button>
+    </div>
+  </div>
+</div>
+
+<!-- VİDEO OLUŞTURULUYOR (kapatılamaz) -->
+<div id="busy" class="dialog-backdrop hidden" role="alertdialog" aria-modal="true" aria-labelledby="busyTitle" aria-busy="true">
+  <div class="dialog busy-dialog">
+    <div class="busy-icon" aria-hidden="true"><span></span><span></span><span></span></div>
+    <h2 id="busyTitle">Oluşturuluyor<span class="dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></h2>
+    <p>Video hazırlanıyor. <strong>Uygulamayı arka plana atmayın</strong> ve ekranı açık tutun; aksi halde video yarım kalabilir.</p>
+    <div class="progress" aria-hidden="true"><i id="busyBar"></i></div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" class="hidden">
+<input type="file" id="videoInput" accept="video/*" class="hidden">
+<input type="file" id="stickerInput" accept="image/*" class="hidden">
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
